@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-Examen Trainer Hessen</title>
+<meta name="description" content="Übungsprogramm für das E-Examen im 2. juristischen Staatsexamen in Hessen – offline, im Browser">
+<meta name="theme-color" content="#2f4a6b">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9Ijk2IiBmaWxsPSIjMmY0YTZiIi8+CiAgPHJlY3QgeD0iMTM2IiB5PSI5NiIgd2lkdGg9IjI0MCIgaGVpZ2h0PSIzMjAiIHJ4PSIxNCIgZmlsbD0iI2ZmZiIvPgogIDxwYXRoIGQ9Ik0xNzYgMTc2aDE2ME0xNzYgMjE2aDE2ME0xNzYgMjU2aDE2ME0xNzYgMjk2aDk2IiBzdHJva2U9IiM5ZmIyYzgiIHN0cm9rZS13aWR0aD0iMTYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDx0ZXh0IHg9IjI1NiIgeT0iMzgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSI4OCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzJmNGE2YiI+wqc8L3RleHQ+Cjwvc3ZnPgo=">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{
+  --accent:#2f4a6b; --accent-ink:#fff; --bg:#e6e6e6; --bar:#fff; --page:#fff; --ink:#1d1d1f;
+  --muted:#6b6b70; --line:#d5d5d8; --hover:#eef1f5; --active:#dde4ee; --warn:#b3261e;
+}
+body[data-theme="dunkel"]{--accent:#1f2a37;--bg:#14161a;--bar:#22252b;--page:#2a2d33;--ink:#e8e8ea;--muted:#a0a3aa;--line:#3a3e45;--hover:#30343b;--active:#3a414c}
+body[data-theme="sepia"]{--accent:#5b4a36;--bg:#e9e1d3;--bar:#f7f1e6;--page:#fbf6ec;--ink:#3b3024;--muted:#7a6b58;--line:#d9ccb6;--hover:#efe6d6;--active:#e5d8c2}
+body[data-theme="kontrast"]{--accent:#000;--bg:#000;--bar:#000;--page:#000;--ink:#fff;--muted:#ffeb3b;--line:#fff;--hover:#333;--active:#555}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;display:flex;flex-direction:column}
+button,select,input{font:inherit;color:inherit}
+
+/* Kopfzeile */
+header{background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;gap:18px;padding:8px 16px;min-height:60px;flex-wrap:wrap}
+.kz small{display:block;font-size:12px;opacity:.85}
+.kz span{font-size:19px;letter-spacing:.5px}
+header h1{flex:1;text-align:center;font-size:24px;font-weight:500;margin:0;letter-spacing:.5px}
+.hgroup{display:flex;align-items:center;gap:12px}
+.hbtn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:4px;padding:6px 10px;cursor:pointer}
+.hbtn:hover{background:rgba(255,255,255,.28)}
+header select{background:#fff;color:#1d1d1f;border:1px solid #ccc;border-radius:4px;padding:5px 8px}
+#timer{font-size:20px;font-variant-numeric:tabular-nums;white-space:nowrap}
+#timer.low{color:#ffd54f}
+#endBtn{background:#fff;color:#1d1d1f;border:none;border-radius:3px;padding:7px 14px;font-size:17px;cursor:pointer}
+
+/* Werkzeugleiste */
+main{flex:1;display:flex;flex-direction:column;padding:16px 16px 0;min-height:0}
+#toolbar{background:var(--bar);border:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;padding:6px 10px;gap:2px;position:sticky;top:0;z-index:5}
+.sep{width:1px;height:30px;background:var(--line);margin:0 8px}
+.tb{background:none;border:none;width:36px;height:36px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);position:relative}
+.tb:hover{background:var(--hover)}
+.tb.on{background:var(--active)}
+.tb svg{width:22px;height:22px}
+.tb .txt{font-size:18px;font-family:Georgia,serif}
+#formatSel{border:1px solid transparent;background:var(--hover);padding:6px 8px;border-radius:4px;min-width:130px;cursor:pointer;color:var(--ink)}
+#formatSel:hover{background:var(--hover)}
+#formatSel option{color:#1d1d1f}
+.dd{position:relative;display:inline-flex}
+.menu{display:none;position:absolute;top:40px;left:0;background:var(--bar);border:1px solid var(--line);box-shadow:0 6px 18px rgba(0,0,0,.18);border-radius:4px;padding:8px;z-index:20}
+.menu.open{display:block}
+.swatches{display:grid;grid-template-columns:repeat(5,26px);gap:6px}
+.sw{width:26px;height:26px;border:1px solid var(--line);border-radius:3px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(8,18px);gap:3px}
+.cell{width:18px;height:18px;border:1px solid var(--line);background:var(--page)}
+.cell.hl{background:var(--active);border-color:var(--accent)}
+.gridlbl{text-align:center;font-size:12px;color:var(--muted);margin-top:6px}
+.chars{display:grid;grid-template-columns:repeat(8,30px);gap:4px}
+.ch{height:30px;border:1px solid var(--line);background:var(--page);border-radius:3px;cursor:pointer;color:var(--ink)}
+.ch:hover{background:var(--hover)}
+
+/* Seite */
+#scroller{flex:1;overflow:auto;padding:14px 0 40px}
+/* Blatt (endlos) mit Schreibspalte in Druckbreite (115 mm) */
+#sheet{background:var(--page);width:210mm;max-width:100%;min-height:110mm;margin:0 auto 30px;padding:30mm 70mm 25mm 25mm;box-shadow:0 1px 3px rgba(0,0,0,.08);cursor:text}
+#page{position:relative;width:100%;min-height:24px;outline:none;cursor:text;
+  font-family:Arial,Helvetica,sans-serif;font-size:12pt;line-height:1.35;color:var(--ink);text-align:justify;white-space:pre-wrap;overflow-wrap:break-word}
+#page:empty:before,#page.blank:before{content:"Hier mit der Bearbeitung beginnen …";color:var(--muted);position:absolute;pointer-events:none}
+#page p,#page div{margin:0 0 .8em}
+#page h1,#page h2,#page h3,#page h4{font-size:1.2em;font-weight:700;margin:1.6em 0 .7em;text-align:left}
+#page ul,#page ol{margin:0 0 .8em;padding-left:1.6em}
+#page blockquote{margin:0 0 .8em 2.2em;padding:0;border:none}
+#page table{border-collapse:collapse;width:100%;margin:.5em 0 .8em}
+#page td,#page th{border:1px solid var(--muted);padding:4px 8px;vertical-align:top;min-width:40px;text-align:left}
+#page td p,#page td div{margin:0}
+#page .nbsp{background:var(--active);border-radius:2px;white-space:nowrap}
+hr.pb{border:none;border-top:2px dashed var(--muted);margin:24px 0;position:relative;overflow:visible}
+hr.pb:after{content:"Seitenumbruch";position:absolute;left:50%;transform:translate(-50%,-50%);background:var(--page);padding:0 8px;font-size:11px;color:var(--muted)}
+body.preview #toolbar .tb:not(#previewBtn),body.preview #formatSel{opacity:.35;pointer-events:none}
+body.locked #page{opacity:.85}
+
+/* Statuszeile */
+footer{display:flex;gap:22px;justify-content:flex-end;padding:6px 18px;font-size:12.5px;color:var(--muted)}
+
+/* Dialoge */
+.overlay{position:fixed;inset:0;background:rgba(15,20,28,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.overlay.open{display:flex}
+.dlg{background:#fff;color:#1d1d1f;border-radius:8px;padding:26px 28px;width:min(480px,100%);box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.dlg h2{margin:0 0 6px;font-size:21px;font-weight:600}
+.dlg p{margin:0 0 16px;color:#555}
+.dlg label{display:block;font-size:13px;color:#555;margin:12px 0 4px}
+.dlg input{width:100%;padding:9px 10px;border:1px solid #c9c9cf;border-radius:5px}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;justify-content:flex-end}
+.btn{border:1px solid #c9c9cf;background:#fff;border-radius:5px;padding:9px 16px;cursor:pointer}
+.btn:hover{background:#f2f3f5}
+.btn.primary{background:#2f4a6b;color:#fff;border-color:#2f4a6b}
+.btn.primary:hover{background:#3b5a80}
+.btn.danger{color:#b3261e;border-color:#e3b2ae}
+#pauseOv .dlg{text-align:center}
+#pauseClock{font-size:42px;font-variant-numeric:tabular-nums;margin:10px 0 4px;color:#2f4a6b}
+#saveBtn{min-width:150px;font-weight:600}
+#saveBtn.ok{background:#2e7d32;border-color:#2e7d32}
+#saveBtn.busy{background:rgba(255,255,255,.15)}
+#saveBtn.warn{background:#e65100;border-color:#e65100;animation:pulse 2s ease-in-out 3}
+#saveBtn.err{background:#b3261e;border-color:#b3261e}
+@keyframes pulse{50%{filter:brightness(1.25)}}
+.recent{margin-top:14px}.recent .vrow{font-size:13.5px}
+footer .st-ok{color:#2e7d32}footer .st-warn{color:#b3261e;font-weight:600}
+.vlist{max-height:300px;overflow:auto;border:1px solid #ddd;border-radius:5px;margin-top:8px}
+.vrow{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid #eee;font-size:14px}
+.vrow:last-child{border-bottom:none}.vrow button{padding:5px 10px}
+.dlg .hint{font-size:13px;color:#666;margin:6px 0 0}
+.dlg .stack{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+#timer.over{color:#ffab91}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1d1d1f;color:#fff;padding:10px 18px;border-radius:6px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:60}
+#toast.show{opacity:1}
+
+@media (max-width:700px){header h1{font-size:18px;order:3;flex-basis:100%}#sheet{padding:28px 16px 60px}}
+
+/* Vorschau = Druckbild (A4, Kopfzeile, Korrekturrand rechts) */
+#pvPages{display:none;padding:10px 0 40px}
+body.preview #sheet{display:none}
+body.preview #pvPages{display:block}
+.pvp{width:210mm;height:297mm;margin:0 auto 14px;background:#fff;color:#000;position:relative;box-shadow:0 1px 4px rgba(0,0,0,.25);overflow:hidden}
+.pvh{position:absolute;left:25mm;right:70mm;top:5mm;height:10mm;border-bottom:.8pt solid #000;display:flex;align-items:flex-start;
+  font:bold 10pt/1.2 Arial,Helvetica,sans-serif}
+.pvh span{flex:1}.pvh span:nth-child(2){text-align:center}.pvh span:nth-child(3){text-align:right}
+.pvb{position:absolute;left:25mm;width:115mm;top:22mm;height:255mm;overflow:hidden;
+  font-family:Arial,Helvetica,sans-serif;font-size:12pt;line-height:1.35;word-wrap:break-word}
+.pvb h1{font-size:1.4em;margin:.6em 0 .3em}.pvb h2{font-size:1.25em;margin:.6em 0 .3em}
+.pvb h1,.pvb h2,.pvb h3,.pvb h4{font-size:1.2em;font-weight:700;margin:1.6em 0 .7em;text-align:left}
+.pvb h3x{}.pvb h4{font-size:1em;margin:.5em 0 .25em}
+.pvb>:first-child{margin-top:0}
+.pvb p,.pvb>div{margin:0 0 .8em}.pvb{text-align:justify;white-space:pre-wrap}.pvb td p,.pvb td div{margin:0}.pvb td{text-align:left}.pvb blockquote{margin:0 0 0 2.2em}.pvb ul,.pvb ol{margin:0 0 .5em;padding-left:1.6em}
+.pvb table{border-collapse:collapse;width:100%;margin:.4em 0}.pvb td,.pvb th{border:1px solid #000;padding:2px 6px;vertical-align:top}
+.pvb hr{border:none;border-top:1px solid #000}
+
+@media print{
+  @page{size:A4;margin:0}
+  html,body{height:auto;background:#fff!important}
+  header,#toolbar,footer,.overlay,#toast,#sheet{display:none!important}
+  body,main,#scroller{display:block;padding:0;margin:0;overflow:visible}
+  #pvPages{display:block!important;padding:0}
+  .pvp{margin:0;box-shadow:none;break-after:page;page-break-after:always}
+  .pvp:last-child{break-after:auto;page-break-after:auto}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body data-theme="standard">
+
+<header>
+  <div class="kz"><small>Kennziffer</small><span id="kzOut">–</span></div>
+  <h1 id="titleOut">Übungsklausur</h1>
+  <div class="hgroup">
+    <button class="hbtn" id="saveBtn">💾 Speichern</button>
+    <button class="hbtn" id="moreBtn" title="Speichern, Kopien &amp; frühere Fassungen">⋯</button>
+    <button class="hbtn" id="pauseBtn" title="Pause (Bildschirm sperren)">☕ Pause</button>
+    <select id="themeSel" title="Darstellung">
+      <option value="standard">Standard</option>
+      <option value="dunkel">Dunkel</option>
+      <option value="sepia">Sepia</option>
+      <option value="kontrast">Hoher Kontrast</option>
+    </select>
+    <span id="timer" title="Verbleibende Bearbeitungszeit">⏱ –</span>
+    <button id="endBtn">Prüfung beenden</button>
+  </div>
+</header>
+
+<main>
+  <div id="toolbar"></div>
+  <div id="scroller"><div id="sheet"><div id="page" contenteditable="true" spellcheck="false"></div></div><div id="pvPages"></div></div>
+</main>
+<footer><span id="wc">0 Wörter</span><span id="cc">0 Zeichen</span><span id="saved">Noch nicht gespeichert</span><span id="fileSt"></span></footer>
+
+<!-- Startdialog -->
+<div class="overlay" id="startOv">
+  <div class="dlg">
+    <h2>Neue Übungsklausur</h2>
+    <p>Die Bearbeitungszeit läuft ab dem Start.</p>
+    <label for="inTitle">Titel</label>
+    <input id="inTitle" value="Übungsklausur Zivilrecht" />
+    <div class="row">
+      <div><label for="inKz">Kennziffer</label><input id="inKz" /></div>
+      <div><label for="inDur">Bearbeitungszeit (Std:Min)</label><input id="inDur" value="5:00" /></div>
+    </div>
+    <label id="autoFileRow" style="display:none;align-items:center;gap:8px;margin-top:14px;font-size:14px;color:#333">
+      <input type="checkbox" id="autoFile" checked style="width:auto"> Klausur als Datei auf dem Rechner speichern (empfohlen)
+    </label>
+    <div class="actions">
+      <button class="btn" id="importBtn">Klausur-Datei öffnen …</button>
+      <button class="btn primary" id="startBtn">Klausur starten</button>
+    </div>
+    <div class="recent" id="recentBox" style="display:none">
+      <label>Zuletzt bearbeitet (in diesem Browser)</label>
+      <div class="vlist" id="recentList"></div>
+    </div>
+    <p class="hint" style="margin-top:18px;border-top:1px solid #eee;padding-top:12px">
+      E-Examen Trainer Hessen v1.1 · Übungsprogramm für das 2. Staatsexamen · Alle Texte bleiben auf diesem Gerät, es wird nichts übertragen.<br>
+      Privates Übungsprogramm – kein offizielles Angebot des Justizprüfungsamts und ohne Verbindung zu Q-Examiner.
+    </p>
+  </div>
+</div>
+
+<!-- Pause -->
+<div class="overlay" id="pauseOv">
+  <div class="dlg">
+    <h2>Pause</h2>
+    <p>Der Bildschirm ist gesperrt. Die Bearbeitungszeit läuft weiter.</p>
+    <div id="pauseClock">–</div>
+    <div class="actions" style="justify-content:center"><button class="btn primary" id="resumePauseBtn">Weiterschreiben</button></div>
+  </div>
+</div>
+
+<!-- Ende -->
+<div class="overlay" id="endOv">
+  <div class="dlg">
+    <h2 id="endTitle">Prüfung beenden?</h2>
+    <p id="endText">Nach dem Beenden ist der Text schreibgeschützt. Du kannst ihn anschließend exportieren.</p>
+    <div class="actions" id="endConfirm">
+      <button class="btn" id="cancelEnd">Zurück zur Klausur</button>
+      <button class="btn primary" id="confirmEnd">Endgültig beenden</button>
+    </div>
+    <div class="actions" id="endExport" style="display:none">
+      <button class="btn primary" id="reopenBtn">Zurück zur Bearbeitung</button>
+      <button class="btn" id="expDoc">Als Word (.doc)</button>
+      <button class="btn" id="expPdf">Drucken / PDF</button>
+      <button class="btn" id="expHtml">Als HTML</button>
+      <button class="btn danger" id="newExam">Neue Klausur</button>
+      <button class="btn" id="closeEnd">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Speichern -->
+<div class="overlay" id="saveOv">
+  <div class="dlg" style="width:min(560px,100%)">
+    <h2>Speichern</h2>
+    <p id="saveInfo"></p>
+    <div class="stack">
+      <button class="btn primary" id="pickFileBtn">Speichern unter … (neue Datei)</button>
+      <button class="btn" id="dlBackupBtn">Kopie herunterladen</button>
+    </div>
+    <p class="hint">Die gespeicherte Datei enthält das Programm und deinen Text. Ein Doppelklick öffnet die Klausur direkt zum Weiterschreiben.</p>
+    <label style="margin-top:18px">Frühere Fassungen (automatisch alle 2 Minuten, die letzten 40)</label>
+    <div class="vlist" id="vlist"></div>
+    <div class="actions"><button class="btn" id="closeSave">Schließen</button></div>
+  </div>
+</div>
+<div class="overlay" id="askOv" style="z-index:70">
+  <div class="dlg"><h2 id="askTitle">Bestätigen</h2><p id="askText"></p>
+    <div class="actions"><button class="btn" id="askNo">Abbrechen</button><button class="btn primary" id="askYes">OK</button></div></div>
+</div>
+<input type="file" id="importFile" accept=".html,.htm,.json" style="display:none">
+
+<div id="toast"></div>
+
+<script>
+(function(){
+const KEY='klausurschreiber.v1';
+/* Unveränderte Kopie der Seite – daraus entsteht die Klausur-Datei (Programm + Text) */
+const TPL=document.documentElement.cloneNode(true);
+(function(){const d=TPL.querySelector('#klausur-data');if(d)d.remove()})();
+const $=id=>document.getElementById(id);
+const page=$('page');
+let S=null, savedRange=null, tick=null, warned={};
+
+/* ---------- Speicher ---------- */
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function loadKz(kz){return lsGet(KEY+':'+kz)}
+function load(){
+  try{const cur=localStorage.getItem(KEY+'.cur');if(cur)return loadKz(cur);
+    const legacy=lsGet(KEY);if(legacy&&legacy.started)return legacy;}catch(e){}
+  return null;
+}
+function recentList(){
+  const out=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith(KEY+':')){const d=lsGet(k);if(d&&d.started)out.push(d)}}}catch(e){}
+  return out.sort((a,b)=>(b.savedAt||b.started)-(a.savedAt||a.started)).slice(0,6);
+}
+function persist(){
+  if(!S) return;
+  S.html=page.innerHTML;S.savedAt=Date.now();
+  try{localStorage.setItem(KEY+':'+S.kennziffer,JSON.stringify(S));localStorage.setItem(KEY+'.cur',S.kennziffer);dirty=false;
+    $('saved').className='st-ok';$('saved').textContent='✓ Im Browser gesichert '+new Date().toLocaleTimeString('de-DE');
+  }catch(e){$('saved').className='st-warn';$('saved').textContent='⚠ Sicherung im Browser nicht möglich – bitte als Datei speichern'}
+}
+let saveT=null;
+let dirty=false;
+function scheduleSave(){dirty=true;fileDirty=true;clearTimeout(saveT);saveT=setTimeout(()=>{persist();scheduleFile()},400);refreshSaveUI()}
+
+/* ---------- Icons ---------- */
+const I={
+ undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
+ redo:'<path d="m15 14 5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/>',
+ cut:'<circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.1 15.9 18 4M15.9 15.9 6 4"/>',
+ copy:'<rect x="8" y="8" width="12" height="13" rx="1"/><path d="M16 8V4a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h3"/>',
+ paste:'<rect x="5" y="4" width="14" height="17" rx="1"/><rect x="9" y="2" width="6" height="4" rx="1"/>',
+ pbreak:'<path d="M6 3v6h12V3M6 21v-6h12v6"/><path d="M3 12h2M8 12h2M14 12h2M19 12h2"/>',
+ mark:'<path d="m14 4 6 6-8 8H6v-6z"/><path d="M3 22h18" stroke-width="3"/>',
+ al:'<path d="M4 6h16M4 10h10M4 14h16M4 18h10"/>',
+ ac:'<path d="M4 6h16M7 10h10M4 14h16M7 18h10"/>',
+ ar:'<path d="M4 6h16M10 10h10M4 14h16M10 18h10"/>',
+ aj:'<path d="M4 6h16M4 10h16M4 14h16M4 18h16"/>',
+ ul:'<circle cx="5" cy="7" r="1.2" fill="currentColor"/><circle cx="5" cy="12" r="1.2" fill="currentColor"/><circle cx="5" cy="17" r="1.2" fill="currentColor"/><path d="M9 7h11M9 12h11M9 17h11"/>',
+ ol:'<path d="M9 7h11M9 12h11M9 17h11"/><text x="2.5" y="9" font-size="6" fill="currentColor" stroke="none">1</text><text x="2.5" y="14" font-size="6" fill="currentColor" stroke="none">2</text><text x="2.5" y="19" font-size="6" fill="currentColor" stroke="none">3</text>',
+ out:'<path d="M11 6h9M11 10h9M11 14h9M4 18h16"/><path d="M7 8 4 11l3 3"/>',
+ ind:'<path d="M11 6h9M11 10h9M11 14h9M4 18h16"/><path d="m4 8 3 3-3 3"/>',
+ table:'<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18M3 15h18M9 4v16M15 4v16"/>',
+ eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+ hr:'<path d="M3 12h18"/><path d="M12 4v4M12 16v4"/>',
+ nbsp:'<path d="M4 14v5h16v-5"/><path d="M12 5v9M7.5 9.5h9"/>'
+};
+const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${I[k]}</svg>`;
+
+/* ---------- Werkzeugleiste ---------- */
+const tb=$('toolbar');
+function btn(html,title,fn,id){
+  const b=document.createElement('button');b.className='tb';b.type='button';b.title=title;b.innerHTML=html;if(id)b.id=id;
+  b.addEventListener('mousedown',e=>e.preventDefault());
+  b.addEventListener('click',e=>{if(isLocked()&&!b.dataset.free)return;fn(e,b)});
+  tb.appendChild(b);return b;
+}
+function sep(){const s=document.createElement('div');s.className='sep';tb.appendChild(s)}
+function exec(cmd,val){restoreSel();page.focus();document.execCommand(cmd,false,val??null);update();}
+
+btn(svg('undo'),'Rückgängig (⌘/Strg+Z)',()=>exec('undo'));
+btn(svg('redo'),'Wiederholen (⌘/Strg+Y)',()=>exec('redo'));
+sep();
+btn(svg('cut'),'Ausschneiden',()=>exec('cut'));
+btn(svg('copy'),'Kopieren',()=>exec('copy'));
+btn(svg('paste'),'Einfügen',async()=>{
+  try{const t=await navigator.clipboard.readText();exec('insertText',t)}
+  catch(e){toast('Bitte mit ⌘/Strg+V einfügen')}
+});
+sep();
+btn(svg('pbreak'),'Seitenumbruch einfügen',()=>exec('insertHTML','<hr class="pb"><p><br></p>'));
+sep();
+const fs=document.createElement('select');fs.id='formatSel';fs.title='Formate';
+[['h3','Kopfzeile'],['p','Absatz']]
+  .forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;fs.appendChild(o)});
+fs.addEventListener('change',()=>{if(!isLocked())exec('formatBlock','<'+fs.value+'>');syncFormat()});
+tb.appendChild(fs);fs.value='p';
+
+/* Textmarker */
+const ddM=document.createElement('div');ddM.className='dd';tb.appendChild(ddM);
+const mBtn=btn(svg('mark')+'<span style="font-size:10px;margin-left:1px">▾</span>','Hervorheben',(e)=>toggleMenu(mMenu));
+mBtn.style.width='46px';ddM.appendChild(mBtn);
+const mMenu=document.createElement('div');mMenu.className='menu';ddM.appendChild(mMenu);
+const sw=document.createElement('div');sw.className='swatches';mMenu.appendChild(sw);
+['#fff176','#a5d6a7','#90caf9','#f8bbd0','#ffcc80','#ce93d8','#b0bec5','#ef9a9a','#80deea','transparent'].forEach(c=>{
+  const d=document.createElement('button');d.className='sw';d.type='button';d.title=c==='transparent'?'Keine Hervorhebung':c;
+  d.style.background=c==='transparent'?'linear-gradient(135deg,#fff 45%,#d33 46%,#d33 54%,#fff 55%)':c;
+  d.addEventListener('mousedown',e=>e.preventDefault());
+  d.onclick=()=>{exec('hiliteColor',c);closeMenus()};sw.appendChild(d);
+});
+sep();
+const bU=btn('<span class="txt" style="text-decoration:underline">U</span>','Unterstrichen (⌘/Strg+U)',()=>exec('underline'));
+const bS=btn('<span class="txt" style="text-decoration:line-through">S</span>','Durchgestrichen',()=>exec('strikeThrough'));
+const bSup=btn('<span class="txt">x<sup style="font-size:11px">2</sup></span>','Hochgestellt',()=>exec('superscript'));
+const bSub=btn('<span class="txt">x<sub style="font-size:11px">2</sub></span>','Tiefgestellt',()=>exec('subscript'));
+sep();
+const bAL=btn(svg('al'),'Linksbündig',()=>exec('justifyLeft'));
+const bAC=btn(svg('ac'),'Zentriert',()=>exec('justifyCenter'));
+const bAR=btn(svg('ar'),'Rechtsbündig',()=>exec('justifyRight'));
+const bAJ=btn(svg('aj'),'Blocksatz',()=>exec('justifyFull'));
+sep();
+const bUL=btn(svg('ul'),'Aufzählung',()=>exec('insertUnorderedList'));
+const bOL=btn(svg('ol'),'Nummerierung',()=>exec('insertOrderedList'));
+btn(svg('out'),'Einzug verkleinern',()=>exec('outdent'));
+btn(svg('ind'),'Einzug vergrößern',()=>exec('indent'));
+btn(svg('nbsp'),'Geschütztes Leerzeichen (⌥/Alt+Leertaste oder Strg+Umschalt+Leertaste)',()=>insertNbsp());
+/* Geschütztes Leerzeichen: der Editor nutzt white-space:pre-wrap, dadurch bleibt U+00A0 beim Weiterschreiben erhalten */
+function insertNbsp(){if(isLocked())return;exec('insertText','\u00a0')}
+btn(svg('hr'),'Trennlinie',()=>exec('insertHTML','<hr><p><br></p>'));
+sep();
+/* Tabelle */
+const ddT=document.createElement('div');ddT.className='dd';tb.appendChild(ddT);
+const tBtn=btn(svg('table')+'<span style="font-size:10px;margin-left:1px">▾</span>','Tabelle einfügen',()=>toggleMenu(tMenu));
+tBtn.style.width='46px';ddT.appendChild(tBtn);
+const tMenu=document.createElement('div');tMenu.className='menu';ddT.appendChild(tMenu);
+const grid=document.createElement('div');grid.className='grid';tMenu.appendChild(grid);
+const glbl=document.createElement('div');glbl.className='gridlbl';glbl.textContent='Größe wählen';tMenu.appendChild(glbl);
+for(let r=1;r<=8;r++)for(let c=1;c<=8;c++){
+  const d=document.createElement('div');d.className='cell';d.dataset.r=r;d.dataset.c=c;
+  d.addEventListener('mousedown',e=>e.preventDefault());
+  d.onmouseenter=()=>{grid.querySelectorAll('.cell').forEach(x=>x.classList.toggle('hl',+x.dataset.r<=r&&+x.dataset.c<=c));glbl.textContent=r+' × '+c};
+  d.onclick=()=>{let h='<table>';for(let i=0;i<r;i++){h+='<tr>';for(let j=0;j<c;j++)h+='<td><br></td>';h+='</tr>'}h+='</table><p><br></p>';exec('insertHTML',h);closeMenus()};
+  grid.appendChild(d);
+}
+sep();
+/* Sonderzeichen */
+const ddC=document.createElement('div');ddC.className='dd';tb.appendChild(ddC);
+const cBtn=btn('<span class="txt" style="font-size:21px">Ω</span>','Sonderzeichen',()=>toggleMenu(cMenu));ddC.appendChild(cBtn);
+const cMenu=document.createElement('div');cMenu.className='menu';cMenu.style.left='auto';cMenu.style.right='0';ddC.appendChild(cMenu);
+const chars=document.createElement('div');chars.className='chars';cMenu.appendChild(chars);
+['§','§§','¶','→','⇒','←','↔','–','—','„','“','‚','‘','»','«','…','€','£','$','%','‰','°','±','×','÷','≠','≈','≤','≥','½','¼','¾','©','®','™','•','·','✓','✗','ß','Ä','Ö','Ü','é','è','ç','ñ','µ'].forEach(ch=>{
+  const b=document.createElement('button');b.className='ch';b.type='button';b.textContent=ch;
+  b.addEventListener('mousedown',e=>e.preventDefault());
+  b.onclick=()=>{exec('insertText',ch==='§§'?'§§ ':ch);closeMenus()};chars.appendChild(b);
+});
+sep();
+const pv=btn(svg('eye'),'Vorschau (schreibgeschützt)',()=>{
+  document.body.classList.toggle('preview');
+  const on=document.body.classList.contains('preview');pv.classList.toggle('on',on);if(on)buildPages();
+  page.contentEditable=(!on&&!isLocked())?'true':'false';
+},'previewBtn');pv.dataset.free='1';
+
+function toggleMenu(m){const o=m.classList.contains('open');closeMenus();if(!o)m.classList.add('open')}
+function closeMenus(){document.querySelectorAll('.menu.open').forEach(m=>m.classList.remove('open'))}
+document.addEventListener('mousedown',e=>{if(!e.target.closest('.dd'))closeMenus()});
+
+/* ---------- Auswahl & Zustand ---------- */
+document.addEventListener('selectionchange',()=>{
+  const s=getSelection();if(s.rangeCount&&page.contains(s.anchorNode))savedRange=s.getRangeAt(0).cloneRange();
+  refreshStates();
+});
+function restoreSel(){if(!savedRange)return;const s=getSelection();if(s.rangeCount&&page.contains(s.anchorNode))return;s.removeAllRanges();s.addRange(savedRange)}
+function syncFormat(){
+  const s=getSelection();if(!s.rangeCount||!page.contains(s.anchorNode))return;
+  let n=s.anchorNode;n=n.nodeType===3?n.parentNode:n;
+  const h=n.closest&&n.closest('h1,h2,h3,h4,h5,h6');fs.value=(h&&page.contains(h))?'h3':'p';
+}
+function refreshStates(){syncFormat();
+  const q=c=>{try{return document.queryCommandState(c)}catch(e){return false}};
+  [[bU,'underline'],[bS,'strikeThrough'],[bSup,'superscript'],[bSub,'subscript'],[bAC,'justifyCenter'],[bAR,'justifyRight'],[bAJ,'justifyFull'],[bUL,'insertUnorderedList'],[bOL,'insertOrderedList']]
+    .forEach(([b,c])=>b.classList.toggle('on',q(c)));
+}
+try{document.execCommand('defaultParagraphSeparator',false,'p')}catch(e){}
+/* leere Seite: mit Absatz beginnen; Klick aufs Blatt setzt Cursor ans Ende */
+function ensureP(){if(!page.firstElementChild&&!page.textContent){page.innerHTML='<p style="text-align: justify;"><br></p>';const r=document.createRange();r.setStart(page.firstChild,0);r.collapse(true);const s=getSelection();s.removeAllRanges();s.addRange(r)}}
+page.addEventListener('focus',()=>{if(!isLocked())ensureP()});
+$('sheet').addEventListener('mousedown',e=>{if(e.target.id!=='sheet'||isLocked())return;e.preventDefault();page.focus();ensureP();
+  const r=document.createRange();r.selectNodeContents(page);r.collapse(false);const s=getSelection();s.removeAllRanges();s.addRange(r)});
+/* Einfügen nur als reiner Text */
+page.addEventListener('paste',e=>{e.preventDefault();const t=(e.clipboardData||window.clipboardData).getData('text/plain');document.execCommand('insertText',false,t)});
+/* Tab = Einzug */
+page.addEventListener('keydown',e=>{
+  if(e.key==='Tab'){e.preventDefault();document.execCommand(e.shiftKey?'outdent':'indent');return}
+  if((e.key===' '||e.key==='\u00a0'||e.code==='Space')&&((e.ctrlKey&&e.shiftKey)||(e.altKey&&!e.metaKey&&!e.ctrlKey))){e.preventDefault();insertNbsp()}
+  
+});
+page.addEventListener('input',update);
+
+function update(){
+  page.classList.toggle('blank',!page.textContent.trim()&&page.querySelectorAll('p,div,h3,li,td').length<=1);
+  const t=page.innerText.replace(/\u00a0/g,' ').trim();
+  const w=t?t.split(/\s+/).length:0;
+  $('wc').textContent=w.toLocaleString('de-DE')+' Wörter';
+  $('cc').textContent=t.length.toLocaleString('de-DE')+' Zeichen';
+  scheduleSave();refreshStates();
+}
+
+/* ---------- Zeit ---------- */
+function fmt(ms){
+  ms=Math.max(0,ms);const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),sec=s%60;
+  const hm=h+':'+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+  return (d?d+' Tage, ':'')+hm+' Std.';
+}
+function runTimer(){
+  clearInterval(tick);
+  const step=()=>{
+    if(!S)return;
+    if(S.finished){$('timer').textContent='⏱ beendet';$('pauseClock').textContent='';return}
+    const left=S.endTime-Date.now();
+    if(left<=0&&S.overtime){$('timer').textContent='⏱ Überzeit '+fmt(-left);$('timer').classList.add('over');$('pauseClock').textContent='Überzeit '+fmt(-left);return}
+    $('timer').classList.remove('over');
+    $('timer').textContent='⏱ '+fmt(left);$('pauseClock').textContent=fmt(left);
+    $('timer').classList.toggle('low',left<15*60000);
+    [[30,'Noch 30 Minuten'],[15,'Noch 15 Minuten'],[5,'Noch 5 Minuten']].forEach(([m,txt])=>{
+      if(left<m*60000&&left>(m-1)*60000&&!warned[m]){warned[m]=1;toast(txt)}
+    });
+    if(left<=0&&!S.overtime)finish(true);
+  };
+  step();tick=setInterval(step,1000);
+}
+
+/* ---------- Ablauf ---------- */
+function isLocked(){return !S||S.finished}
+function applyHeader(){
+  $('kzOut').textContent=S.kennziffer||'–';$('titleOut').textContent=S.title||'Übungsklausur';
+  document.title=(S.title||'Klausur')+' – E-Examen Trainer Hessen';
+}
+function setLocked(l){document.body.classList.toggle('locked',l);page.contentEditable=l?'false':'true'}
+
+function start(){
+  const dur=$('inDur').value.trim().match(/^(\d{1,2})(?::(\d{1,2}))?$/);
+  if(!dur){toast('Zeit bitte als Std:Min angeben, z. B. 5:00');return}
+  const ms=((+dur[1])*60+(+(dur[2]||0)))*60000;
+  if(ms<=0){toast('Bitte eine Bearbeitungszeit angeben');return}
+  S={title:$('inTitle').value.trim(),kennziffer:$('inKz').value.trim()||('UEB'+String(Date.now()).slice(-7)),
+     started:Date.now(),endTime:Date.now()+ms,durationMs:ms,finished:false,html:'',theme:$('themeSel').value};
+  S.html='<p style="text-align: justify;"><br></p>';warned={};fileHandle=null;pendingHandle=null;
+  begin();
+  if(CAN_PICK&&$('autoFile').checked)pickFile(true);
+}
+function begin(){
+  applyHeader();setLocked(!!S.finished);page.innerHTML=S.html||'';
+  $('startOv').classList.remove('open');persist();update();runTimer();
+  fileDirty=false;restoreHandle();refreshSaveUI();
+  if(!S.finished)setTimeout(()=>page.focus(),50);
+}
+function finish(auto){
+  if(!S||S.finished)return;
+  S.finished=true;S.finishedAt=Date.now();persist();setLocked(true);runTimer();
+  $('endTitle').textContent=auto?'Bearbeitungszeit abgelaufen':'Prüfung beendet';
+  $('endText').textContent='Der Text ist jetzt schreibgeschützt. Exportiere ihn für die Korrektur oder zur Ablage.';
+  $('endConfirm').style.display='none';$('endExport').style.display='flex';$('endOv').classList.add('open');
+}
+
+$('startBtn').onclick=start;
+$('endBtn').onclick=()=>{
+  if(!S)return;
+  if(S.finished){$('endTitle').textContent='Prüfung beendet';$('endConfirm').style.display='none';$('endExport').style.display='flex'}
+  else{$('endTitle').textContent='Prüfung beenden?';$('endText').textContent='Nach dem Beenden ist der Text schreibgeschützt. Du kannst ihn anschließend exportieren.';$('endConfirm').style.display='flex';$('endExport').style.display='none'}
+  $('endOv').classList.add('open');
+};
+$('cancelEnd').onclick=$('closeEnd').onclick=()=>$('endOv').classList.remove('open');
+$('confirmEnd').onclick=()=>finish(false);
+$('newExam').onclick=async()=>{
+  $('endOv').classList.remove('open');
+  const ok=await ask('Neue Klausur beginnen?','Die aktuelle Klausur wird geschlossen. Sie bleibt in diesem Browser unter „Zuletzt bearbeitet“ und – falls gespeichert – in ihrer Datei erhalten.','Neue Klausur');
+  if(!ok){$('endOv').classList.add('open');return}
+  if(S)snapshot(true);
+  if(S)persist();
+  if(fileHandle&&fileDirty)await writeFile(false);
+  try{localStorage.removeItem(KEY+'.cur')}catch(e){}
+  S=null;fileHandle=null;pendingHandle=null;fileDirty=false;dirty=false;clearInterval(tick);page.innerHTML='';
+  $('timer').textContent='⏱ –';$('timer').classList.remove('low','over');
+  $('kzOut').textContent='–';$('titleOut').textContent='Übungsklausur';
+  $('saved').textContent='Noch nicht gespeichert';$('saved').className='';
+  fileStatus('');refreshSaveUI();
+  document.body.classList.remove('preview');pv.classList.remove('on');
+  $('inKz').value='';setLocked(true);showStart();
+};
+$('pauseBtn').onclick=()=>{if(S&&!S.finished)$('pauseOv').classList.add('open')};
+$('resumePauseBtn').onclick=()=>{$('pauseOv').classList.remove('open');page.focus()};
+$('themeSel').onchange=e=>{document.body.dataset.theme=e.target.value;try{localStorage.setItem(KEY+'.theme',e.target.value)}catch(_){}};
+
+/* ---------- Export ---------- */
+function fname(ext){
+  const tr={'ä':'ae','ö':'oe','ü':'ue','Ä':'Ae','Ö':'Oe','Ü':'Ue','ß':'ss'};
+  return ((S.kennziffer||'Klausur')+'_'+(S.title||'')).replace(/[äöüÄÖÜß]/g,c=>tr[c]).normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_').replace(/_+$/,'')+'.'+ext}
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function bodyHtml(){return page.innerHTML.replace(/\n/g,'<br>').replace(/<hr class="pb">/g,'<br clear=all style="page-break-before:always">')}
+function meta(){
+  const d=new Date(S.started).toLocaleString('de-DE');
+  return `<p style="font-size:10pt;color:#555">Kennziffer: ${esc(S.kennziffer)} · ${esc(S.title)} · begonnen ${d}</p>`;
+}
+const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('expDoc').onclick=()=>{
+  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(S.title)}</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
+<style>@page Section1{size:21cm 29.7cm;margin:2.2cm 7cm 2cm 2.5cm}div.Section1{page:Section1}
+body{font-family:Arial;font-size:12pt;line-height:150%;text-align:justify}p,div{margin:0 0 9.6pt}h1,h2,h3,h4{font-size:14.4pt;margin:19pt 0 8pt;text-align:left}table{border-collapse:collapse}td,th{border:1px solid #000;padding:3pt 6pt;vertical-align:top}blockquote{margin:0 0 0 1.2cm}</style></head>
+<body><div class="Section1">${meta()}${bodyHtml()}</div></body></html>`;
+  dl(new Blob(['\ufeff',html],{type:'application/msword'}),fname('doc'));
+};
+$('expHtml').onclick=()=>{
+  const html=`<!doctype html><html lang="de"><head><meta charset="utf-8"><title>${esc(S.title)}</title><style>body{font-family:Arial;font-size:12pt;line-height:1.6;max-width:16cm;margin:2cm auto}table{border-collapse:collapse}td{border:1px solid #000;padding:4px 8px}hr.pb{page-break-after:always;border:none}blockquote{margin:0 0 0 2em}</style></head><body>${meta()}${page.innerHTML.replace(/\n/g,'<br>')}</body></html>`;
+  dl(new Blob([html],{type:'text/html'}),fname('html'));
+};
+$('expPdf').onclick=()=>{$('endOv').classList.remove('open');buildPages();setTimeout(()=>window.print(),100)};
+
+/* ---------- Seitenaufbau für Vorschau & Druck ---------- */
+function newPageEl(box){
+  const p=document.createElement('div');p.className='pvp';
+  p.innerHTML='<div class="pvh"><span></span><span></span><span></span></div><div class="pvb"></div>';
+  p.querySelector('.pvh span').textContent=S?S.kennziffer:'';
+  p.querySelectorAll('.pvh span')[1].textContent=S?S.title:'';
+  box.appendChild(p);return p.querySelector('.pvb');
+}
+const over=b=>b.scrollHeight>b.clientHeight+1;
+function textNodes(el){const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);const r=[];while(w.nextNode())r.push(w.currentNode);return r}
+/* teilt Block el (bereits in body, zu lang) an Wortgrenze; liefert Rest-Element oder null */
+function splitBlock(el,body){
+  const src=el.cloneNode(true);
+  const cands=[];textNodes(src).forEach((t,i)=>{const re=/[ \t\n\r]+/g;let m;while((m=re.exec(t.data)))cands.push([i,m.index+m[0].length])});
+  if(!cands.length)return null;
+  const cut=(node,k)=>{const tn=textNodes(node)[cands[k][0]];const r=document.createRange();r.setStart(tn,cands[k][1]);r.setEnd(node,node.childNodes.length);return r.extractContents()};
+  let lo=-1,hi=cands.length-1;
+  while(lo<hi){const mid=Math.ceil((lo+hi+1)/2);const t=src.cloneNode(true);cut(t,mid);body.replaceChild(t,body.lastChild);
+    if(over(body))hi=mid-1;else lo=mid;}
+  if(lo<0){body.replaceChild(el,body.lastChild);return null}
+  const first=src.cloneNode(true);const restFrag=cut(first,lo);
+  body.replaceChild(first,body.lastChild);
+  const rest=src.cloneNode(false);rest.appendChild(restFrag);
+  if(rest.style)rest.style.textIndent='0';
+  return rest;
+}
+function buildPages(){
+  const box=$('pvPages');const wasHidden=getComputedStyle(box).display==='none';
+  if(wasHidden)box.style.display='block';
+  box.innerHTML='';let body=newPageEl(box);
+  let group=[];
+  const flushInline=()=>{if(!group.length)return;const d=document.createElement('div');group.forEach(n=>d.appendChild(n));group=[];place(d)};
+  function place(c){
+    body.appendChild(c);
+    let guard=0;
+    while(over(body)&&guard++<500){
+      const rest=/^(TABLE|UL|OL|HR|H[1-6])$/.test(c.tagName)?null:splitBlock(c,body);
+      if(rest){body=newPageEl(box);body.appendChild(rest);c=rest;continue}
+      if(body.childNodes.length>1){body.removeChild(c);body=newPageEl(box);body.appendChild(c);continue}
+      break;
+    }
+  }
+  [...page.childNodes].forEach(nd=>{
+    if(nd.nodeType===1&&nd.matches('hr.pb')){flushInline();body=newPageEl(box);return}
+    const block=nd.nodeType===1&&/^(DIV|P|H[1-6]|UL|OL|TABLE|BLOCKQUOTE|HR|PRE)$/.test(nd.tagName);
+    if(!block){if(nd.nodeType===3&&!nd.data.trim()&&!group.length)return;group.push(nd.cloneNode(true));return}
+    flushInline();
+    const prev=body.lastChild;
+    const pages0=box.children.length;
+    place(nd.cloneNode(true));
+    if(prev&&/^H[1-6]$/.test(prev.tagName)&&box.children.length>pages0&&prev.parentNode&&prev.parentNode.childNodes.length>1&&prev.parentNode.lastChild===prev){
+      const nb=body;prev.remove();nb.insertBefore(prev,nb.firstChild);
+      while(over(nb)&&nb.childNodes.length>1){/* selten: zurücklassen */nb.removeChild(prev);break}
+    }
+  });
+  flushInline();
+  const pages=box.querySelectorAll('.pvp');
+  pages.forEach((p,i)=>p.querySelectorAll('.pvh span')[2].textContent=(i+1)+'/'+pages.length);
+  if(wasHidden)box.style.display='';
+}
+window.addEventListener('beforeprint',buildPages);
+
+/* ---------- eigener Bestätigungsdialog (Browser-Dialoge sind in manchen Ansichten gesperrt) ---------- */
+function ask(title,text,yes){
+  return new Promise(res=>{
+    $('askTitle').textContent=title;$('askText').textContent=text;$('askYes').textContent=yes||'OK';
+    $('askOv').classList.add('open');
+    const done=v=>{$('askOv').classList.remove('open');$('askYes').onclick=$('askNo').onclick=null;res(v)};
+    $('askYes').onclick=()=>done(true);$('askNo').onclick=()=>done(false);
+  });
+}
+
+/* ---------- Wiederaufnehmen nach Beenden ---------- */
+function reopen(){
+  if(!S)return;
+  S.finished=false;delete S.finishedAt;
+  if(S.endTime<=Date.now()){S.overtime=true;toast('Bearbeitungszeit war abgelaufen – die Uhr zählt jetzt die Überzeit.')}
+  setLocked(false);persist();runTimer();$('endOv').classList.remove('open');setTimeout(()=>page.focus(),50);
+}
+$('reopenBtn').onclick=reopen;
+
+/* ---------- Speichern als Datei ----------
+   Eine Klausur = eine Datei. Die Datei enthält das komplette Programm plus den Text;
+   ein Doppelklick öffnet die Klausur direkt zum Weiterschreiben. */
+const CAN_PICK=(()=>{try{return 'showSaveFilePicker' in window&&window.isSecureContext!==false&&window.top===window}catch(e){return false}})();
+let fileHandle=null,pendingHandle=null,fileDirty=false,fileBusy=false,lastFileSave=0,fileErr='',fileT=null,lastDl=0;
+function fileHtml(){
+  persist();
+  const doc=TPL.cloneNode(true);
+  const t=doc.querySelector('title');if(t)t.textContent=(S.title||'Klausur')+' – '+S.kennziffer;
+  const sc=document.createElement('script');sc.type='application/json';sc.id='klausur-data';
+  sc.textContent=JSON.stringify(S).replace(/</g,'\\u003c');
+  doc.querySelector('head').appendChild(sc);
+  return '<!doctype html>\n'+doc.outerHTML;
+}
+function fileStatus(txt,cls){const e=$('fileSt');e.textContent=txt;e.className=cls||''}
+const hm=t=>new Date(t).toLocaleTimeString('de-DE');
+function refreshSaveUI(){
+  const b=$('saveBtn');b.className='hbtn';
+  if(!S){b.textContent='💾 Speichern';b.title='';fileStatus('');return}
+  if(fileHandle&&!fileErr){
+    if(fileDirty||fileBusy){b.classList.add('busy');b.textContent='● Wird gespeichert …'}
+    else{b.classList.add('ok');b.textContent='✓ Gespeichert'}
+    b.title='Datei „'+fileHandle.name+'“'+(lastFileSave?' – zuletzt '+hm(lastFileSave):'')+'. Klick oder ⌘/Strg+S speichert sofort.';
+    fileStatus('Datei: '+fileHandle.name+(lastFileSave?' · '+hm(lastFileSave):''),'st-ok');
+  }else if(fileErr){b.classList.add('err');b.textContent='⚠ Erneut speichern';b.title=fileErr;fileStatus('⚠ '+fileErr,'st-warn')}
+  else if(pendingHandle){b.classList.add('warn');b.textContent='🔗 Datei verbinden';
+    b.title='Klick erlaubt dem Programm, weiter in „'+pendingHandle.name+'“ zu speichern.';fileStatus('Datei „'+pendingHandle.name+'“ nicht verbunden','st-warn')}
+  else if(CAN_PICK){b.classList.add('warn');b.textContent='💾 Als Datei speichern';
+    b.title='Klausur als Datei auf dem Rechner speichern; danach wird automatisch gespeichert.';fileStatus('Noch nicht als Datei gespeichert','st-warn')}
+  else{b.textContent='⬇ Als Datei sichern';
+    b.title='Dieser Browser kann nicht selbstständig in eine Datei schreiben. Klick lädt den aktuellen Stand als Datei herunter.';
+    fileStatus(lastDl?'Zuletzt als Datei gesichert '+hm(lastDl):'Nur im Browser gesichert',lastDl?'':'st-warn')}
+}
+async function writeFile(manual){
+  if(!fileHandle||!S)return;
+  if(fileBusy){fileDirty=true;return}
+  fileBusy=true;refreshSaveUI();
+  try{const w=await fileHandle.createWritable();await w.write(fileHtml());await w.close();
+    fileDirty=false;fileErr='';lastFileSave=Date.now();if(manual)toast('Gespeichert in „'+fileHandle.name+'“');}
+  catch(e){
+    if(e&&e.name==='NotAllowedError'){pendingHandle=fileHandle;fileHandle=null;fileErr='';toast('Bitte das Speichern in die Datei erlauben (Knopf oben).')}
+    else{fileErr='Datei konnte nicht gespeichert werden ('+(e&&e.name||'Fehler')+')';toast(fileErr+' – Text ist im Browser gesichert.')}
+  }
+  fileBusy=false;refreshSaveUI();
+  if(fileDirty&&fileHandle&&!fileErr)scheduleFile();
+}
+function scheduleFile(){if(!fileHandle)return;clearTimeout(fileT);fileT=setTimeout(()=>writeFile(false),1500)}
+async function pickFile(fromStart){
+  if(!S)return;
+  if(!CAN_PICK){downloadFile();return}
+  try{
+    const h=await window.showSaveFilePicker({suggestedName:fname('html'),types:[{description:'Klausur',accept:{'text/html':['.html']}}]});
+    fileHandle=h;pendingHandle=null;fileErr='';$('saveOv').classList.remove('open');
+    idbSet(S.kennziffer,h);await writeFile(true);
+  }catch(e){
+    if(e&&e.name==='AbortError')toast(fromStart?'Ohne Datei gestartet – der Text wird im Browser gesichert. Speichern jederzeit oben rechts.':'Abgebrochen – nichts geändert.');
+    else{toast('Speichern-Fenster nicht verfügbar – die Klausur wird stattdessen heruntergeladen.');downloadFile()}
+  }
+  refreshSaveUI();
+}
+async function reconnect(){
+  const h=pendingHandle;if(!h)return;
+  try{const r=await h.requestPermission({mode:'readwrite'});
+    if(r==='granted'){fileHandle=h;pendingHandle=null;fileErr='';await writeFile(true)}
+    else toast('Nicht erlaubt – du kannst stattdessen „Speichern unter …“ wählen.');
+  }catch(e){pendingHandle=null;toast('Die frühere Datei ist nicht mehr erreichbar – bitte neu speichern.')}
+  refreshSaveUI();
+}
+function downloadFile(){if(!S)return;dl(new Blob([fileHtml()],{type:'text/html'}),fname('html'));lastDl=Date.now();refreshSaveUI();
+  toast('Heruntergeladen: '+fname('html')+' – per Doppelklick wieder öffnen')}
+function saveAction(manual){
+  persist();
+  if(fileHandle&&!fileErr)return writeFile(manual);
+  if(fileErr&&fileHandle){fileErr='';return writeFile(manual)}
+  if(pendingHandle)return reconnect();
+  return pickFile(false);
+}
+/* Sicherheitsnetz: regelmäßig sichern */
+setInterval(()=>{if(dirty)persist();if(fileHandle&&fileDirty&&!fileErr)writeFile(false)},10000);
+
+/* Datei-Verknüpfung pro Kennziffer merken (IndexedDB), damit nach Neustart ein Klick genügt */
+function idb(){return new Promise((res,rej)=>{try{const r=indexedDB.open('klausurschreiber',1);r.onupgradeneeded=()=>r.result.createObjectStore('handles');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
+async function idbSet(k,v){try{const d=await idb();d.transaction('handles','readwrite').objectStore('handles').put(v,k)}catch(e){}}
+async function idbGet(k){try{const d=await idb();return await new Promise(r=>{const q=d.transaction('handles').objectStore('handles').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)})}catch(e){return null}}
+async function restoreHandle(){
+  if(!CAN_PICK||!S||fileHandle)return;
+  const kz=S.kennziffer,h=await idbGet(kz);if(!h||!S||S.kennziffer!==kz)return;
+  try{const p=await h.queryPermission({mode:'readwrite'});
+    if(p==='granted'){fileHandle=h;pendingHandle=null}else pendingHandle=h}catch(e){}
+  refreshSaveUI();
+}
+
+/* ---------- Frühere Fassungen ---------- */
+const VKEY=KEY+'.versions';
+function loadV(){try{return JSON.parse(localStorage.getItem(VKEY))||[]}catch(e){return[]}}
+function snapshot(force){
+  if(!S)return;const html=page.innerHTML;const v=loadV();
+  if(!force&&v.length&&v[0].html===html)return;
+  if(!html.trim())return;
+  v.unshift({t:Date.now(),kz:S.kennziffer,words:(page.innerText.trim().split(/\s+/).filter(Boolean).length),html});
+  while(v.length>40)v.pop();
+  for(;;){try{localStorage.setItem(VKEY,JSON.stringify(v));break}catch(e){if(v.length<=1)break;v.pop()}}
+}
+setInterval(()=>snapshot(false),120000);
+function renderV(){
+  const box=$('vlist');box.innerHTML='';
+  const v=loadV().filter(x=>!S||x.kz===S.kennziffer);
+  if(!v.length){box.innerHTML='<div class="vrow" style="color:#777">Noch keine früheren Fassungen</div>';return}
+  v.forEach((x,i)=>{const r=document.createElement('div');r.className='vrow';
+    r.innerHTML=`<span>${new Date(x.t).toLocaleString('de-DE')} · ${x.words.toLocaleString('de-DE')} Wörter</span>`;
+    const b=document.createElement('button');b.className='btn';b.textContent='Wiederherstellen';
+    b.onclick=async()=>{if(!S||S.finished){toast('Bitte zuerst „Zurück zur Bearbeitung“ wählen');return}
+      if(!await ask('Fassung wiederherstellen?','Der aktuelle Text wird durch diese Fassung ersetzt. Der aktuelle Stand wird vorher als Fassung gesichert.','Wiederherstellen'))return;
+      snapshot(true);page.innerHTML=x.html;update();persist();renderV();toast('Fassung wiederhergestellt')};
+    r.appendChild(b);box.appendChild(r)});
+}
+$('saveBtn').onclick=()=>{if(S)saveAction(true)};
+$('moreBtn').onclick=()=>{
+  if(!S){toast('Bitte zuerst eine Klausur starten');return}
+  $('saveInfo').textContent=fileHandle?'Die Klausur wird automatisch in „'+fileHandle.name+'“ gespeichert (wenige Sekunden nach jeder Änderung und mit ⌘/Strg+S).'
+    :CAN_PICK?'Die Klausur ist bisher nur im Browser gesichert. Mit „Speichern unter …“ legst du eine Datei an; danach speichert das Programm automatisch hinein.'
+    :'Dieser Browser kann nicht selbstständig in eine Datei schreiben (das können nur Chrome und Edge). Der Text ist im Browser gesichert; „Kopie herunterladen“ legt zusätzlich eine Datei an.';
+  $('pickFileBtn').style.display=CAN_PICK?'':'none';
+  renderV();$('saveOv').classList.add('open')};
+$('closeSave').onclick=()=>$('saveOv').classList.remove('open');
+$('pickFileBtn').onclick=()=>pickFile(false);
+$('dlBackupBtn').onclick=downloadFile;
+
+/* ---------- Sicherung öffnen ---------- */
+$('importBtn').onclick=()=>$('importFile').click();
+$('importFile').onchange=async e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{
+    const txt=await f.text();let data;
+    if(/^\s*\{/.test(txt))data=JSON.parse(txt);
+    else{const d=new DOMParser().parseFromString(txt,'text/html');const j=d.getElementById('klausur-data');if(!j)throw 0;data=JSON.parse(j.textContent)}
+    if(data&&!data.kennziffer)data.kennziffer='UEB'+String(data.started||Date.now()).slice(-7);
+    if(!data||!data.started)throw 0;
+    const local=loadKz(data.kennziffer);
+    if(local&&(local.savedAt||0)>(data.savedAt||0)&&await ask('Neuerer Stand im Browser','Für diese Klausur gibt es im Browser einen neueren Stand ('+new Date(local.savedAt).toLocaleString('de-DE')+'). Diesen statt der Datei öffnen?','Neueren Stand öffnen'))data=local;
+    S=data;warned={};fileHandle=null;pendingHandle=null;begin();toast('Klausur geöffnet');
+  }catch(err){toast('Diese Datei ist keine Klausur-Datei')}
+};
+
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.shiftKey&&e.key.toLowerCase()==='s'){e.preventDefault();if(S)saveAction(true)}});
+
+/* ---------- Hilfen ---------- */
+let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),3200)}
+window.addEventListener('beforeunload',()=>{persist();snapshot(false);if(fileHandle&&fileDirty)writeFile(false)});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){persist();if(fileHandle&&fileDirty)writeFile(false)}});
+
+/* ---------- Init ---------- */
+try{const th=localStorage.getItem(KEY+'.theme');if(th){document.body.dataset.theme=th;$('themeSel').value=th}}catch(e){}
+if(CAN_PICK)$('autoFileRow').style.display='flex';
+function showStart(){
+  const box=$('recentList');box.innerHTML='';const list=recentList();
+  $('recentBox').style.display=list.length?'':'none';
+  list.forEach(d=>{const r=document.createElement('div');r.className='vrow';
+    const sp=document.createElement('span');sp.textContent=(d.title||'Ohne Titel')+' · '+d.kennziffer+' · '+new Date(d.savedAt||d.started).toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'})+(d.finished?' · beendet':'');
+    const b=document.createElement('button');b.className='btn';b.textContent='Öffnen';
+    b.onclick=()=>{S=loadKz(d.kennziffer)||d;warned={};fileHandle=null;pendingHandle=null;begin()};
+    r.append(sp,b);box.appendChild(r)});
+  setLocked(true);$('startOv').classList.add('open');
+}
+refreshSaveUI();
+/* Wurde eine Klausur-Datei per Doppelklick geöffnet? Dann direkt weiterschreiben. */
+(function(){
+  let emb=null;try{const j=document.getElementById('klausur-data');if(j)emb=JSON.parse(j.textContent)}catch(e){}
+  if(emb&&emb.started){
+    const local=loadKz(emb.kennziffer);
+    S=(local&&(local.savedAt||0)>(emb.savedAt||0))?local:emb;
+    begin();
+    toast(S===local?'Klausur geöffnet (neuerer Stand aus dem Browser)':'Klausur geöffnet');
+  }else{
+    /* Legacy-Speicher übernehmen */
+    try{const legacy=lsGet(KEY);if(legacy&&legacy.started&&legacy.kennziffer&&!loadKz(legacy.kennziffer)){localStorage.setItem(KEY+':'+legacy.kennziffer,JSON.stringify(legacy));localStorage.removeItem(KEY)}}catch(e){}
+    showStart();
+  }
+})();
+/* Offline-Fähigkeit, wenn online ausgeliefert */
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+})();
+</script>
+</body>
+</html>
