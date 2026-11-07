@@ -13,6 +13,7 @@
 - Export als PDF (über Drucken), Word und HTML
 - Speichern wie in Word: Eine Klausur ist eine Datei. Sie öffnet sich per Doppelklick direkt zum Weiterschreiben. In Chrome/Edge wird automatisch hineingespeichert, zusätzlich laufend im Browser. Frühere Fassungen werden alle 2 Minuten angelegt.
 - Nach dem Beenden weiterschreiben (mit Überzeit-Anzeige)
+- Titel und Kennziffer lassen sich nach dem Beenden noch ändern
 
 ## Nutzung
 

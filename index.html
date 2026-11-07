@@ -63,10 +63,12 @@ main{flex:1;display:flex;flex-direction:column;padding:16px 16px 0;min-height:0}
 
 /* Seite */
 #scroller{flex:1;overflow:auto;padding:14px 0 40px}
+body:not(.preview) #sheet{padding-bottom:max(120px,25vh);margin-bottom:0}
+body:not(.preview) #scroller{padding-bottom:0}
 /* Blatt (endlos) mit Schreibspalte in Druckbreite (115 mm) */
 #sheet{background:var(--page);width:210mm;max-width:100%;min-height:110mm;margin:0 auto 30px;padding:30mm 70mm 25mm 25mm;box-shadow:0 1px 3px rgba(0,0,0,.08);cursor:text}
 #page{position:relative;width:100%;min-height:24px;outline:none;cursor:text;
-  font-family:Arial,Helvetica,sans-serif;font-size:12pt;line-height:1.35;color:var(--ink);text-align:justify;white-space:pre-wrap;overflow-wrap:break-word}
+  font-family:Verdana,Geneva,sans-serif;font-size:12pt;line-height:1.35;color:var(--ink);text-align:justify;white-space:pre-wrap;overflow-wrap:break-word}
 #page:empty:before,#page.blank:before{content:"Hier mit der Bearbeitung beginnen …";color:var(--muted);position:absolute;pointer-events:none}
 #page p,#page div{margin:0 0 .8em}
 #page h1,#page h2,#page h3,#page h4{font-size:1.2em;font-weight:700;margin:1.6em 0 .7em;text-align:left}
@@ -82,7 +84,8 @@ body.preview #toolbar .tb:not(#previewBtn),body.preview #formatSel{opacity:.35;p
 body.locked #page{opacity:.85}
 
 /* Statuszeile */
-footer{display:flex;gap:22px;justify-content:flex-end;padding:6px 18px;font-size:12.5px;color:var(--muted)}
+footer{display:flex;gap:22px;justify-content:flex-end;padding:6px 18px;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;height:28px;box-sizing:border-box;align-items:center}
+footer span{flex-shrink:0}footer #fileSt{flex-shrink:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 
 /* Dialoge */
 .overlay{position:fixed;inset:0;background:rgba(15,20,28,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
@@ -101,9 +104,7 @@ footer{display:flex;gap:22px;justify-content:flex-end;padding:6px 18px;font-size
 .btn.danger{color:#b3261e;border-color:#e3b2ae}
 #pauseOv .dlg{text-align:center}
 #pauseClock{font-size:42px;font-variant-numeric:tabular-nums;margin:10px 0 4px;color:#2f4a6b}
-#saveBtn{min-width:150px;font-weight:600}
-#saveBtn.ok{background:#2e7d32;border-color:#2e7d32}
-#saveBtn.busy{background:rgba(255,255,255,.15)}
+#saveBtn{width:40px;height:34px;flex:0 0 40px;box-sizing:border-box;padding:0;font-size:17px;line-height:1;text-align:center;overflow:hidden}
 #saveBtn.warn{background:#e65100;border-color:#e65100;animation:pulse 2s ease-in-out 3}
 #saveBtn.err{background:#b3261e;border-color:#b3261e}
 @keyframes pulse{50%{filter:brightness(1.25)}}
@@ -126,10 +127,10 @@ body.preview #sheet{display:none}
 body.preview #pvPages{display:block}
 .pvp{width:210mm;height:297mm;margin:0 auto 14px;background:#fff;color:#000;position:relative;box-shadow:0 1px 4px rgba(0,0,0,.25);overflow:hidden}
 .pvh{position:absolute;left:25mm;right:70mm;top:5mm;height:10mm;border-bottom:.8pt solid #000;display:flex;align-items:flex-start;
-  font:bold 10pt/1.2 Arial,Helvetica,sans-serif}
+  font:bold 10pt/1.2 Verdana,Geneva,sans-serif}
 .pvh span{flex:1}.pvh span:nth-child(2){text-align:center}.pvh span:nth-child(3){text-align:right}
 .pvb{position:absolute;left:25mm;width:115mm;top:22mm;height:255mm;overflow:hidden;
-  font-family:Arial,Helvetica,sans-serif;font-size:12pt;line-height:1.35;word-wrap:break-word}
+  font-family:Verdana,Geneva,sans-serif;font-size:12pt;line-height:1.35;word-wrap:break-word}
 .pvb h1{font-size:1.4em;margin:.6em 0 .3em}.pvb h2{font-size:1.25em;margin:.6em 0 .3em}
 .pvb h1,.pvb h2,.pvb h3,.pvb h4{font-size:1.2em;font-weight:700;margin:1.6em 0 .7em;text-align:left}
 .pvb h3x{}.pvb h4{font-size:1em;margin:.5em 0 .25em}
@@ -156,7 +157,7 @@ body.preview #pvPages{display:block}
   <div class="kz"><small>Kennziffer</small><span id="kzOut">–</span></div>
   <h1 id="titleOut">Übungsklausur</h1>
   <div class="hgroup">
-    <button class="hbtn" id="saveBtn">💾 Speichern</button>
+    <button class="hbtn" id="saveBtn" aria-label="Speichern">💾</button>
     <button class="hbtn" id="moreBtn" title="Speichern, Kopien &amp; frühere Fassungen">⋯</button>
     <button class="hbtn" id="pauseBtn" title="Pause (Bildschirm sperren)">☕ Pause</button>
     <select id="themeSel" title="Darstellung">
@@ -199,7 +200,7 @@ body.preview #pvPages{display:block}
       <div class="vlist" id="recentList"></div>
     </div>
     <p class="hint" style="margin-top:18px;border-top:1px solid #eee;padding-top:12px">
-      E-Examen Trainer Hessen v1.1 · Übungsprogramm für das 2. Staatsexamen · Alle Texte bleiben auf diesem Gerät, es wird nichts übertragen.<br>
+      E-Examen Trainer Hessen v1.1.1 · Übungsprogramm für das 2. Staatsexamen · Alle Texte bleiben auf diesem Gerät, es wird nichts übertragen.<br>
       Privates Übungsprogramm – kein offizielles Angebot des Justizprüfungsamts und ohne Verbindung zu Q-Examiner.
     </p>
   </div>
@@ -223,6 +224,14 @@ body.preview #pvPages{display:block}
     <div class="actions" id="endConfirm">
       <button class="btn" id="cancelEnd">Zurück zur Klausur</button>
       <button class="btn primary" id="confirmEnd">Endgültig beenden</button>
+    </div>
+    <div id="endMeta" style="display:none">
+      <label for="edTitle">Titel</label>
+      <input id="edTitle" />
+      <div class="row" style="align-items:flex-end">
+        <div><label for="edKz">Kennziffer</label><input id="edKz" /></div>
+        <div style="flex:0 0 auto"><button class="btn" id="edApply">Übernehmen</button></div>
+      </div>
     </div>
     <div class="actions" id="endExport" style="display:none">
       <button class="btn primary" id="reopenBtn">Zurück zur Bearbeitung</button>
@@ -443,6 +452,26 @@ page.addEventListener('keydown',e=>{
   
 });
 page.addEventListener('input',update);
+/* Schreibmaschinen-Abstand: Cursor bleibt mit Abstand zum unteren Fensterrand */
+function caretRect(){
+  const sel=getSelection();if(!sel.rangeCount)return null;
+  const r=sel.getRangeAt(0).cloneRange();if(!page.contains(r.endContainer))return null;
+  r.collapse(false);let rc=r.getClientRects()[0];
+  if(!rc||(!rc.height&&!rc.top)){let n=r.endContainer;if(n.nodeType!==1)n=n.parentNode;
+    if(n.nodeType===1&&n.childNodes[r.endOffset]&&n.childNodes[r.endOffset].nodeType===1)n=n.childNodes[r.endOffset];
+    rc=n.getBoundingClientRect()}
+  return rc;
+}
+function keepCaretAway(){
+  requestAnimationFrame(()=>{
+    const sc=$('scroller'),rc=caretRect();if(!rc)return;
+    const box=sc.getBoundingClientRect(),gap=Math.max(110,window.innerHeight*.25-10);
+    const over=rc.bottom-(box.bottom-gap);
+    if(over>0)sc.scrollTop+=over;
+  });
+}
+page.addEventListener('input',keepCaretAway);
+page.addEventListener('keyup',e=>{if(['Enter','ArrowDown','ArrowUp','PageDown','End'].includes(e.key))keepCaretAway()});
 
 function update(){
   page.classList.toggle('blank',!page.textContent.trim()&&page.querySelectorAll('p,div,h3,li,td').length<=1);
@@ -507,18 +536,40 @@ function finish(auto){
   S.finished=true;S.finishedAt=Date.now();persist();setLocked(true);runTimer();
   $('endTitle').textContent=auto?'Bearbeitungszeit abgelaufen':'Prüfung beendet';
   $('endText').textContent='Der Text ist jetzt schreibgeschützt. Exportiere ihn für die Korrektur oder zur Ablage.';
-  $('endConfirm').style.display='none';$('endExport').style.display='flex';$('endOv').classList.add('open');
+  $('endConfirm').style.display='none';showEndExport();$('endOv').classList.add('open');
+}
+function showEndExport(){
+  $('endExport').style.display='flex';$('endMeta').style.display='block';
+  $('edTitle').value=S.title||'';$('edKz').value=S.kennziffer||'';
+}
+async function renameExam(){
+  if(!S)return;
+  const t=$('edTitle').value.trim(),kz=$('edKz').value.trim(),old=S.kennziffer;
+  if(!kz){toast('Bitte eine Kennziffer angeben');return}
+  if(kz===old&&t===(S.title||'')){toast('Keine Änderung');return}
+  if(kz!==old){
+    if(loadKz(kz)&&!await ask('Kennziffer bereits vergeben','Unter „'+kz+'“ ist in diesem Browser schon eine andere Klausur gesichert. Sie wird durch diese Klausur ersetzt.','Ersetzen')){return}
+    try{localStorage.removeItem(KEY+':'+old)}catch(e){}
+    try{const v=loadV();v.forEach(x=>{if(x.kz===old)x.kz=kz});localStorage.setItem(VKEY,JSON.stringify(v))}catch(e){}
+    const h=fileHandle||pendingHandle||await idbGet(old);if(h){await idbSet(kz,h)}await idbDel(old);
+  }
+  S.title=t;S.kennziffer=kz;persist();applyHeader();
+  if(document.body.classList.contains('preview'))buildPages();
+  if(fileHandle){fileDirty=true;await writeFile(false)}
+  refreshSaveUI();toast('Titel und Kennziffer geändert');
 }
 
 $('startBtn').onclick=start;
 $('endBtn').onclick=()=>{
   if(!S)return;
-  if(S.finished){$('endTitle').textContent='Prüfung beendet';$('endConfirm').style.display='none';$('endExport').style.display='flex'}
-  else{$('endTitle').textContent='Prüfung beenden?';$('endText').textContent='Nach dem Beenden ist der Text schreibgeschützt. Du kannst ihn anschließend exportieren.';$('endConfirm').style.display='flex';$('endExport').style.display='none'}
+  if(S.finished){$('endTitle').textContent='Prüfung beendet';$('endConfirm').style.display='none';showEndExport()}
+  else{$('endTitle').textContent='Prüfung beenden?';$('endText').textContent='Nach dem Beenden ist der Text schreibgeschützt. Du kannst ihn anschließend exportieren.';$('endConfirm').style.display='flex';$('endExport').style.display='none';$('endMeta').style.display='none'}
   $('endOv').classList.add('open');
 };
 $('cancelEnd').onclick=$('closeEnd').onclick=()=>$('endOv').classList.remove('open');
 $('confirmEnd').onclick=()=>finish(false);
+$('edApply').onclick=renameExam;
+$('edKz').onkeydown=$('edTitle').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();renameExam()}};
 $('newExam').onclick=async()=>{
   $('endOv').classList.remove('open');
   const ok=await ask('Neue Klausur beginnen?','Die aktuelle Klausur wird geschlossen. Sie bleibt in diesem Browser unter „Zuletzt bearbeitet“ und – falls gespeichert – in ihrer Datei erhalten.','Neue Klausur');
@@ -555,12 +606,12 @@ $('expDoc').onclick=()=>{
   const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(S.title)}</title>
 <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
 <style>@page Section1{size:21cm 29.7cm;margin:2.2cm 7cm 2cm 2.5cm}div.Section1{page:Section1}
-body{font-family:Arial;font-size:12pt;line-height:150%;text-align:justify}p,div{margin:0 0 9.6pt}h1,h2,h3,h4{font-size:14.4pt;margin:19pt 0 8pt;text-align:left}table{border-collapse:collapse}td,th{border:1px solid #000;padding:3pt 6pt;vertical-align:top}blockquote{margin:0 0 0 1.2cm}</style></head>
+body{font-family:Verdana,Geneva,sans-serif;font-size:12pt;line-height:150%;text-align:justify}p,div{margin:0 0 9.6pt}h1,h2,h3,h4{font-size:14.4pt;margin:19pt 0 8pt;text-align:left}table{border-collapse:collapse}td,th{border:1px solid #000;padding:3pt 6pt;vertical-align:top}blockquote{margin:0 0 0 1.2cm}</style></head>
 <body><div class="Section1">${meta()}${bodyHtml()}</div></body></html>`;
   dl(new Blob(['\ufeff',html],{type:'application/msword'}),fname('doc'));
 };
 $('expHtml').onclick=()=>{
-  const html=`<!doctype html><html lang="de"><head><meta charset="utf-8"><title>${esc(S.title)}</title><style>body{font-family:Arial;font-size:12pt;line-height:1.6;max-width:16cm;margin:2cm auto}table{border-collapse:collapse}td{border:1px solid #000;padding:4px 8px}hr.pb{page-break-after:always;border:none}blockquote{margin:0 0 0 2em}</style></head><body>${meta()}${page.innerHTML.replace(/\n/g,'<br>')}</body></html>`;
+  const html=`<!doctype html><html lang="de"><head><meta charset="utf-8"><title>${esc(S.title)}</title><style>body{font-family:Verdana,Geneva,sans-serif;font-size:12pt;line-height:1.6;max-width:16cm;margin:2cm auto}table{border-collapse:collapse}td{border:1px solid #000;padding:4px 8px}hr.pb{page-break-after:always;border:none}blockquote{margin:0 0 0 2em}</style></head><body>${meta()}${page.innerHTML.replace(/\n/g,'<br>')}</body></html>`;
   dl(new Blob([html],{type:'text/html'}),fname('html'));
 };
 $('expPdf').onclick=()=>{$('endOv').classList.remove('open');buildPages();setTimeout(()=>window.print(),100)};
@@ -664,18 +715,17 @@ function fileStatus(txt,cls){const e=$('fileSt');e.textContent=txt;e.className=c
 const hm=t=>new Date(t).toLocaleTimeString('de-DE');
 function refreshSaveUI(){
   const b=$('saveBtn');b.className='hbtn';
-  if(!S){b.textContent='💾 Speichern';b.title='';fileStatus('');return}
+  if(!S){b.textContent='💾';b.title='Speichern';fileStatus('');return}
   if(fileHandle&&!fileErr){
-    if(fileDirty||fileBusy){b.classList.add('busy');b.textContent='● Wird gespeichert …'}
-    else{b.classList.add('ok');b.textContent='✓ Gespeichert'}
+    b.textContent='💾';
     b.title='Datei „'+fileHandle.name+'“'+(lastFileSave?' – zuletzt '+hm(lastFileSave):'')+'. Klick oder ⌘/Strg+S speichert sofort.';
     fileStatus('Datei: '+fileHandle.name+(lastFileSave?' · '+hm(lastFileSave):''),'st-ok');
-  }else if(fileErr){b.classList.add('err');b.textContent='⚠ Erneut speichern';b.title=fileErr;fileStatus('⚠ '+fileErr,'st-warn')}
-  else if(pendingHandle){b.classList.add('warn');b.textContent='🔗 Datei verbinden';
+  }else if(fileErr){b.classList.add('err');b.textContent='⚠';b.title='Speichern fehlgeschlagen – Klick speichert erneut. '+fileErr;fileStatus('⚠ '+fileErr,'st-warn')}
+  else if(pendingHandle){b.classList.add('warn');b.textContent='🔗';
     b.title='Klick erlaubt dem Programm, weiter in „'+pendingHandle.name+'“ zu speichern.';fileStatus('Datei „'+pendingHandle.name+'“ nicht verbunden','st-warn')}
-  else if(CAN_PICK){b.classList.add('warn');b.textContent='💾 Als Datei speichern';
+  else if(CAN_PICK){b.classList.add('warn');b.textContent='💾';
     b.title='Klausur als Datei auf dem Rechner speichern; danach wird automatisch gespeichert.';fileStatus('Noch nicht als Datei gespeichert','st-warn')}
-  else{b.textContent='⬇ Als Datei sichern';
+  else{b.textContent='⬇';
     b.title='Dieser Browser kann nicht selbstständig in eine Datei schreiben. Klick lädt den aktuellen Stand als Datei herunter.';
     fileStatus(lastDl?'Zuletzt als Datei gesichert '+hm(lastDl):'Nur im Browser gesichert',lastDl?'':'st-warn')}
 }
@@ -729,6 +779,7 @@ setInterval(()=>{if(dirty)persist();if(fileHandle&&fileDirty&&!fileErr)writeFile
 /* Datei-Verknüpfung pro Kennziffer merken (IndexedDB), damit nach Neustart ein Klick genügt */
 function idb(){return new Promise((res,rej)=>{try{const r=indexedDB.open('klausurschreiber',1);r.onupgradeneeded=()=>r.result.createObjectStore('handles');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
 async function idbSet(k,v){try{const d=await idb();d.transaction('handles','readwrite').objectStore('handles').put(v,k)}catch(e){}}
+async function idbDel(k){try{const d=await idb();d.transaction('handles','readwrite').objectStore('handles').delete(k)}catch(e){}}
 async function idbGet(k){try{const d=await idb();return await new Promise(r=>{const q=d.transaction('handles').objectStore('handles').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)})}catch(e){return null}}
 async function restoreHandle(){
   if(!CAN_PICK||!S||fileHandle)return;
