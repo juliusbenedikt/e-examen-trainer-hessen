@@ -7,6 +7,7 @@
 ## Funktionen
 
 - Countdown mit frei wählbarer Bearbeitungszeit, Pause-Bildschirm, Hinweise vor Ablauf
+- Zeit anhalten und später weiterlaufen lassen: Die Restzeit wird mit der Klausur gespeichert, sodass man auch an einem anderen Tag weiterschreiben kann
 - Formate „Kopfzeile“ und „Absatz“, Blocksatz als Standard, Hervorhebungen, Listen, Tabellen, Sonderzeichen
 - Geschütztes Leerzeichen (Knopf, ⌥/Alt+Leertaste oder Strg+Umschalt+Leertaste)
 - Vorschau und Druck im Klausurformat: A4, Kopfzeile mit Kennziffer, Titel und Seitenzahl, Korrekturrand rechts

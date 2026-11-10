@@ -1,5 +1,5 @@
 // Offline-Cache für den E-Examen Trainer Hessen. Bei jeder neuen Version VERSION erhöhen.
-const VERSION = 'e-examen-trainer-v1.1.1';
+const VERSION = 'e-examen-trainer-v1.2.0';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
