@@ -68,7 +68,7 @@ body:not(.preview) #scroller{padding-bottom:0}
 /* Blatt (endlos) mit Schreibspalte in Druckbreite (115 mm) */
 #sheet{background:var(--page);width:210mm;max-width:100%;min-height:110mm;margin:0 auto 30px;padding:30mm 70mm 25mm 25mm;box-shadow:0 1px 3px rgba(0,0,0,.08);cursor:text}
 #page{position:relative;width:100%;min-height:24px;outline:none;cursor:text;
-  font-family:Verdana,Geneva,sans-serif;font-size:12pt;line-height:1.35;color:var(--ink);text-align:justify;white-space:pre-wrap;overflow-wrap:break-word}
+  font-family:Verdana,Geneva,sans-serif;font-size:12pt;line-height:1.35;color:var(--ink);text-align:justify;white-space:pre-wrap;white-space:break-spaces;overflow-wrap:anywhere}
 #page:empty:before,#page.blank:before{content:"Hier mit der Bearbeitung beginnen …";color:var(--muted);position:absolute;pointer-events:none}
 #page p,#page div{margin:0 0 .8em}
 #page h1,#page h2,#page h3,#page h4{font-size:1.2em;font-weight:700;margin:1.6em 0 .7em;text-align:left}
@@ -135,7 +135,7 @@ body.preview #pvPages{display:block}
 .pvb h1,.pvb h2,.pvb h3,.pvb h4{font-size:1.2em;font-weight:700;margin:1.6em 0 .7em;text-align:left}
 .pvb h3x{}.pvb h4{font-size:1em;margin:.5em 0 .25em}
 .pvb>:first-child{margin-top:0}
-.pvb p,.pvb>div{margin:0 0 .8em}.pvb{text-align:justify;white-space:pre-wrap}.pvb td p,.pvb td div{margin:0}.pvb td{text-align:left}.pvb blockquote{margin:0 0 0 2.2em}.pvb ul,.pvb ol{margin:0 0 .5em;padding-left:1.6em}
+.pvb p,.pvb>div{margin:0 0 .8em}.pvb{text-align:justify;white-space:pre-wrap;white-space:break-spaces;overflow-wrap:anywhere}.pvb td p,.pvb td div{margin:0}.pvb td{text-align:left}.pvb blockquote{margin:0 0 0 2.2em}.pvb ul,.pvb ol{margin:0 0 .5em;padding-left:1.6em}
 .pvb table{border-collapse:collapse;width:100%;margin:.4em 0}.pvb td,.pvb th{border:1px solid #000;padding:2px 6px;vertical-align:top}
 .pvb hr{border:none;border-top:1px solid #000}
 
@@ -200,7 +200,7 @@ body.preview #pvPages{display:block}
       <div class="vlist" id="recentList"></div>
     </div>
     <p class="hint" style="margin-top:18px;border-top:1px solid #eee;padding-top:12px">
-      E-Examen Trainer Hessen v1.2.0 · Übungsprogramm für das 2. Staatsexamen · Alle Texte bleiben auf diesem Gerät, es wird nichts übertragen.<br>
+      E-Examen Trainer Hessen v1.2.1 · Übungsprogramm für das 2. Staatsexamen · Alle Texte bleiben auf diesem Gerät, es wird nichts übertragen.<br>
       Privates Übungsprogramm – kein offizielles Angebot des Justizprüfungsamts und ohne Verbindung zu Q-Examiner.
     </p>
   </div>
@@ -382,8 +382,8 @@ const bAJ=btn(svg('aj'),'Blocksatz',()=>exec('justifyFull'));
 sep();
 const bUL=btn(svg('ul'),'Aufzählung',()=>exec('insertUnorderedList'));
 const bOL=btn(svg('ol'),'Nummerierung',()=>exec('insertOrderedList'));
-btn(svg('out'),'Einzug verkleinern',()=>exec('outdent'));
-btn(svg('ind'),'Einzug vergrößern',()=>exec('indent'));
+btn(svg('out'),'Einzug verkleinern (⇧+Tab)',()=>{restoreSel();page.focus();indentBlocks(-1)});
+btn(svg('ind'),'Einzug vergrößern (Tab)',()=>{restoreSel();page.focus();indentBlocks(1)});
 btn(svg('nbsp'),'Geschütztes Leerzeichen (⌥/Alt+Leertaste oder Strg+Umschalt+Leertaste)',()=>insertNbsp());
 /* Geschütztes Leerzeichen: der Editor nutzt white-space:pre-wrap, dadurch bleibt U+00A0 beim Weiterschreiben erhalten */
 function insertNbsp(){if(isLocked())return;exec('insertText','\u00a0')}
@@ -449,9 +449,62 @@ $('sheet').addEventListener('mousedown',e=>{if(e.target.id!=='sheet'||isLocked()
   const r=document.createRange();r.selectNodeContents(page);r.collapse(false);const s=getSelection();s.removeAllRanges();s.addRange(r)});
 /* Einfügen nur als reiner Text */
 page.addEventListener('paste',e=>{e.preventDefault();const t=(e.clipboardData||window.clipboardData).getData('text/plain');document.execCommand('insertText',false,t)});
+
+/* ---------- Einzug ----------
+   Statt <blockquote> (execCommand 'indent' erzeugt in Chrome/Safari verschachtelte, teils ungültige
+   Strukturen wie <p><blockquote>…</blockquote>Text</p> mit margin-bottom:0, wodurch der Absatzabstand
+   verloren geht) wird der Einzug als margin-left am Absatz selbst gespeichert – wie in Word. */
+const IND_EM=2.2,IND_MAX=10,BLK='P,DIV,H1,H2,H3,H4,H5,H6';
+const getInd=el=>{const m=/^([\d.]+)em$/.exec(el.style.marginLeft||'');return m?Math.round(parseFloat(m[1])/IND_EM):0};
+function setInd(el,n){n=Math.max(0,Math.min(IND_MAX,n));el.style.marginLeft=n?(n*IND_EM).toFixed(1).replace(/\.0$/,'')+'em':'';if(!el.getAttribute('style'))el.removeAttribute('style')}
+function selBlocks(){
+  const sel=getSelection();if(!sel.rangeCount)return[];const r=sel.getRangeAt(0);
+  if(!page.contains(r.commonAncestorContainer))return[];
+  const blockOf=n=>{n=n.nodeType===3?n.parentNode:n;while(n&&n!==page&&!(n.nodeType===1&&BLK.split(',').includes(n.tagName)&&!n.querySelector(BLK.toLowerCase())))n=n.parentNode;return n&&n!==page?n:null};
+  const out=[];const add=b=>{if(b&&!out.includes(b))out.push(b)};
+  add(blockOf(r.startContainer));
+  if(!r.collapsed){page.querySelectorAll(BLK.toLowerCase()).forEach(b=>{if(!b.querySelector(BLK.toLowerCase())&&r.intersectsNode(b))add(b)});add(blockOf(r.endContainer))}
+  return out;
+}
+function indentBlocks(d){
+  if(isLocked())return;
+  const sel=getSelection();if(!sel.rangeCount)return;
+  let n=sel.anchorNode;n=n&&(n.nodeType===3?n.parentNode:n);
+  if(n&&n.closest&&n.closest('li')&&page.contains(n)){document.execCommand(d>0?'indent':'outdent');update();return}
+  let bl=selBlocks();
+  if(!bl.length){document.execCommand('formatBlock',false,'p');bl=selBlocks()}
+  bl.forEach(b=>setInd(b,getInd(b)+d));
+  update();
+}
+/* Altbestand: <blockquote>-Einzüge und Absätze mit Block-Inhalt in flache Absätze mit margin-left umwandeln */
+function normalizeIndent(root=page){
+  const isBlock=n=>n.nodeType===1&&/^(P|DIV|H[1-6]|UL|OL|TABLE|BLOCKQUOTE|HR)$/.test(n.tagName);
+  let guard=0,c;
+  while(guard++<5000&&(c=root.querySelector('blockquote, p:has(> p,> div,> blockquote,> ul,> ol,> table,> h1,> h2,> h3,> h4), div:has(> p,> blockquote)'))){
+    const base=c.tagName==='BLOCKQUOTE'?(+c.dataset.ind||0)+1:getInd(c);
+    const align=c.tagName==='BLOCKQUOTE'?'':c.style.textAlign;
+    const frag=document.createDocumentFragment();let run=null;
+    const flush=()=>{if(run){if(run.textContent.trim()||run.querySelector('img,br'))frag.appendChild(run);run=null}};
+    [...c.childNodes].forEach(ch=>{
+      if(isBlock(ch)){flush();
+        if(ch.tagName==='BLOCKQUOTE')ch.dataset.ind=base+(+ch.dataset.ind||0);
+        else if(!/^(UL|OL|TABLE|HR)$/.test(ch.tagName)){setInd(ch,getInd(ch)+base)}
+        else if(base)ch.style.marginLeft=(base*IND_EM)+'em';
+        frag.appendChild(ch);
+      }else{
+        if(!run){run=document.createElement('p');if(align)run.style.textAlign=align;else run.style.textAlign='justify';setInd(run,base)}
+        run.appendChild(ch);
+      }
+    });
+    flush();
+    c.replaceWith(frag);
+  }
+  /* leere Absatz-Hüllen ohne Inhalt (Parser-Reste von <p><blockquote>) entfernen */
+  root.querySelectorAll('p:empty,div:empty').forEach(e=>e.remove());
+}
 /* Tab = Einzug */
 page.addEventListener('keydown',e=>{
-  if(e.key==='Tab'){e.preventDefault();document.execCommand(e.shiftKey?'outdent':'indent');return}
+  if(e.key==='Tab'){e.preventDefault();indentBlocks(e.shiftKey?-1:1);return}
   if((e.key===' '||e.key==='\u00a0'||e.code==='Space')&&((e.ctrlKey&&e.shiftKey)||(e.altKey&&!e.metaKey&&!e.ctrlKey))){e.preventDefault();insertNbsp()}
   
 });
@@ -533,7 +586,7 @@ function start(){
   if(CAN_PICK&&$('autoFile').checked)pickFile(true);
 }
 function begin(){
-  applyHeader();setLocked(!!S.finished);page.innerHTML=S.html||'';
+  applyHeader();setLocked(!!S.finished);page.innerHTML=S.html||'';normalizeIndent();
   $('startOv').classList.remove('open');persist();update();runTimer();
   fileDirty=false;restoreHandle();refreshSaveUI();
   $('pauseOv').classList.remove('open');
@@ -853,7 +906,7 @@ function renderV(){
     const b=document.createElement('button');b.className='btn';b.textContent='Wiederherstellen';
     b.onclick=async()=>{if(!S||S.finished){toast('Bitte zuerst „Zurück zur Bearbeitung“ wählen');return}
       if(!await ask('Fassung wiederherstellen?','Der aktuelle Text wird durch diese Fassung ersetzt. Der aktuelle Stand wird vorher als Fassung gesichert.','Wiederherstellen'))return;
-      snapshot(true);page.innerHTML=x.html;update();persist();renderV();toast('Fassung wiederhergestellt')};
+      snapshot(true);page.innerHTML=x.html;normalizeIndent();update();persist();renderV();toast('Fassung wiederhergestellt')};
     r.appendChild(b);box.appendChild(r)});
 }
 $('saveBtn').onclick=()=>{if(S)saveAction(true)};
